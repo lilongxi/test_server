@@ -1,0 +1,27 @@
+{
+	"apps ":[
+		{
+			"name": "test_app",
+			"script": "index.js",
+			"env": {
+				"COMMON_VARIABLE": "true"
+			},
+			"env_production": {
+				"NODE_ENV": "production"
+			}
+		}
+	],
+	"deploy":{
+		"production": {
+			"user":"lilongxi",
+			"host":["106.14.175.146"],
+			"ref": "origin/master",
+			"repo": "https://github.com/lilongxi/test_server.git",
+			"path":"/home/lilongxi/test_server",
+			"env":{
+				"NODE_ENV": "production"
+			}
+		}
+	}
+
+}
