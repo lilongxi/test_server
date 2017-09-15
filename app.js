@@ -2,33 +2,25 @@ import express, {Router} from 'express';
 import http from 'http';
 import path from 'path';
 import fs from 'fs';
-import uuid from 'node-uuid';
-
-const audioPath = path.join(__dirname, './public/source');
-const sourceURL = 'http://localhost:8080';
+import bodyParser from 'body-parser';
 
 let app = express();
 let server = http.Server(app);
 let router = Router();
 
-router.get('/client/video', async (req, res) => {
-	const audioCollection = [];
-	await fs.readdir(audioPath,function(err, items){
-				if(err){
-					res.send({status:'err', code:100, info:'获取失败'})
-				}else{
-					items.forEach((item) => {
-						const collection = {
-							name:item.split('.')[0],
-							url:sourceURL + '/source/' + item,
-							id:uuid.v4()
-						}
-						audioCollection.push(collection);
-					});
-					res.send({status:'ok', code:200, collection: audioCollection})
-				}
-			});
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//controller
+import {clientVideo} from './public/controller/client_vido';
+import {download} from './public/controller/client_download';
+
+//获取歌曲列表
+router.get('/client/video', clientVideo);
+
+
+//获取下载音乐列表
+router.post('/client/download',download);
 
 app.all('*', function(req, res, next) {
 	//设置多个域名跨域
